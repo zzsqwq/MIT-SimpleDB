@@ -1,15 +1,14 @@
 package simpledb.storage;
 
 import simpledb.common.Database;
-import simpledb.common.Permissions;
 import simpledb.common.DbException;
-import simpledb.common.DeadlockException;
+import simpledb.common.Permissions;
 import simpledb.transaction.TransactionAbortedException;
 import simpledb.transaction.TransactionId;
 
-import java.io.*;
-
-import java.util.concurrent.ConcurrentHashMap;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -33,13 +32,18 @@ public class BufferPool {
     constructor instead. */
     public static final int DEFAULT_PAGES = 50;
 
+    private int pagesLimit;
+    private HashMap<PageId, Page> pagesMap;
+    private ArrayList<Page> pages;
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
      * @param numPages maximum number of pages in this buffer pool.
      */
     public BufferPool(int numPages) {
-        // some code goes here
+        pagesLimit = numPages;
+        pagesMap = new HashMap<>();
+        pages = new ArrayList<>();
     }
     
     public static int getPageSize() {
@@ -72,9 +76,20 @@ public class BufferPool {
      * @param perm the requested permissions on the page
      */
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
-        throws TransactionAbortedException, DbException {
-        // some code goes here
-        return null;
+        throws TransactionAbortedException, DbException{
+            Page page = null;
+
+            if(pagesMap.containsKey(pid)) {
+                return pagesMap.get(pid);
+            }
+
+            if(pages.size() > pagesLimit) {
+                throw new DbException("exceed pages limit!");
+            }
+
+            page = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
+
+            return page;
     }
 
     /**
