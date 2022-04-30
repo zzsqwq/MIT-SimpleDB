@@ -7,8 +7,7 @@ import simpledb.transaction.TransactionAbortedException;
 import simpledb.transaction.TransactionId;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -32,9 +31,8 @@ public class BufferPool {
     constructor instead. */
     public static final int DEFAULT_PAGES = 50;
 
-    private int pagesLimit;
-    private HashMap<PageId, Page> pagesMap;
-    private ArrayList<Page> pages;
+    private final int pagesLimit;
+    private ConcurrentHashMap<PageId, Page> pagesMap;
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
@@ -42,8 +40,7 @@ public class BufferPool {
      */
     public BufferPool(int numPages) {
         pagesLimit = numPages;
-        pagesMap = new HashMap<>();
-        pages = new ArrayList<>();
+        pagesMap = new ConcurrentHashMap<>();
     }
     
     public static int getPageSize() {
@@ -60,8 +57,7 @@ public class BufferPool {
     	BufferPool.pageSize = DEFAULT_PAGE_SIZE;
     }
 
-    /**
-     * Retrieve the specified page with the associated permissions.
+    /** * Retrieve the specified page with the associated permissions.
      * Will acquire a lock and may block if that lock is held by another
      * transaction.
      * <p>
@@ -77,19 +73,22 @@ public class BufferPool {
      */
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
         throws TransactionAbortedException, DbException{
-            Page page = null;
 
             if(pagesMap.containsKey(pid)) {
                 return pagesMap.get(pid);
             }
+            else {
+                if (pagesMap.size() < pagesLimit) {
+                    Page page = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
+                    pagesMap.put(pid,page);
+                    return page;
+                }
+                else {
+                    throw new DbException("exceed pages limit!!");
+                }
 
-            if(pages.size() > pagesLimit) {
-                throw new DbException("exceed pages limit!");
             }
 
-            page = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
-
-            return page;
     }
 
     /**
