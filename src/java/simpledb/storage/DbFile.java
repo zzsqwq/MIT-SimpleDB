@@ -57,7 +57,8 @@ public interface DbFile {
      * @param tid The transaction performing the update
      * @param t The tuple to delete.  This tuple should be updated to reflect that
      *          it is no longer stored on any page.
-     * @return An ArrayList contain the pages that were modified
+     * @return An ArrayList coe
+    }ntain the pages that were modified
      * @throws DbException if the tuple cannot be deleted or is not a member
      *   of the file
      */

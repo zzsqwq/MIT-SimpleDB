@@ -1,14 +1,12 @@
 package simpledb.storage;
 
 import simpledb.common.Database;
-import simpledb.common.Permissions;
 import simpledb.common.DbException;
-import simpledb.common.DeadlockException;
+import simpledb.common.Permissions;
 import simpledb.transaction.TransactionAbortedException;
 import simpledb.transaction.TransactionId;
 
-import java.io.*;
-
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -33,13 +31,16 @@ public class BufferPool {
     constructor instead. */
     public static final int DEFAULT_PAGES = 50;
 
+    private final int pagesLimit;
+    private ConcurrentHashMap<PageId, Page> pagesMap;
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
      * @param numPages maximum number of pages in this buffer pool.
      */
     public BufferPool(int numPages) {
-        // some code goes here
+        pagesLimit = numPages;
+        pagesMap = new ConcurrentHashMap<>();
     }
     
     public static int getPageSize() {
@@ -56,8 +57,7 @@ public class BufferPool {
     	BufferPool.pageSize = DEFAULT_PAGE_SIZE;
     }
 
-    /**
-     * Retrieve the specified page with the associated permissions.
+    /** * Retrieve the specified page with the associated permissions.
      * Will acquire a lock and may block if that lock is held by another
      * transaction.
      * <p>
@@ -72,9 +72,23 @@ public class BufferPool {
      * @param perm the requested permissions on the page
      */
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
-        throws TransactionAbortedException, DbException {
-        // some code goes here
-        return null;
+        throws TransactionAbortedException, DbException{
+
+            if(pagesMap.containsKey(pid)) {
+                return pagesMap.get(pid);
+            }
+            else {
+                if (pagesMap.size() < pagesLimit) {
+                    Page page = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
+                    pagesMap.put(pid,page);
+                    return page;
+                }
+                else {
+                    throw new DbException("exceed pages limit!!");
+                }
+
+            }
+
     }
 
     /**
