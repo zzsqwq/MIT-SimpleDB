@@ -55,8 +55,7 @@ public class HeapPage implements Page {
         header = new byte[getHeaderSize()];
         for (int i=0; i<header.length; i++)
             header[i] = dis.readByte();
-        
-        tuples = new Tuple[numSlots];
+            tuples = new Tuple[numSlots];
         try{
             // allocate and read the actual records of this page
             for (int i=0; i<tuples.length; i++)
@@ -309,9 +308,9 @@ public class HeapPage implements Page {
     }
 
 
-    class HeadPageTupleIterator implements Iterator {
+    class HeapPageTupleIterator implements Iterator {
         private final Iterator<Tuple> iter;
-        public HeadPageTupleIterator() {
+        public HeapPageTupleIterator() {
             ArrayList<Tuple> tupleList = new ArrayList<Tuple>(tuples.length);
             for(int i = 0; i < tuples.length ; i++) {
                 if(isSlotUsed(i)) {
@@ -341,7 +340,7 @@ public class HeapPage implements Page {
      * (note that this iterator shouldn't return tuples in empty slots!)
      */
     public Iterator<Tuple> iterator() {
-        return new HeadPageTupleIterator();
+        return new HeapPageTupleIterator();
     }
 
 }
