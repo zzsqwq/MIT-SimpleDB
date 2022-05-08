@@ -23,31 +23,37 @@ public class Filter extends Operator {
      * @param child
      *            The child operator
      */
+
+    private Predicate p_;
+    private OpIterator child_;
+
     public Filter(Predicate p, OpIterator child) {
-        // some code goes here
+        this.p_ = p;
+        this.child_ = child;
     }
 
     public Predicate getPredicate() {
-        // some code goes here
-        return null;
+        return this.p_;
     }
 
     public TupleDesc getTupleDesc() {
-        // some code goes here
-        return null;
+        return this.child_.getTupleDesc();
     }
 
     public void open() throws DbException, NoSuchElementException,
             TransactionAbortedException {
-        // some code goes here
+        super.open();
+        child_.open();
+
     }
 
     public void close() {
-        // some code goes here
+        super.close();
+        child_.close();
     }
 
     public void rewind() throws DbException, TransactionAbortedException {
-        // some code goes here
+        child_.rewind();
     }
 
     /**
@@ -61,19 +67,24 @@ public class Filter extends Operator {
      */
     protected Tuple fetchNext() throws NoSuchElementException,
             TransactionAbortedException, DbException {
-        // some code goes here
+        while(child_.hasNext()) {
+            Tuple t = child_.next();
+            if(p_.filter(t)) {
+                return t;
+            }
+        }
+
         return null;
     }
 
     @Override
     public OpIterator[] getChildren() {
-        // some code goes here
-        return null;
+        return new OpIterator[]{child_};
     }
 
     @Override
     public void setChildren(OpIterator[] children) {
-        // some code goes here
+        this.child_ = children[0];
     }
 
 }
