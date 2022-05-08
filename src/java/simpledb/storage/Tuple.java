@@ -17,8 +17,8 @@ public class Tuple implements Serializable {
      * Create a new tuple with the specified schema (type).
      *
      * @param td
-     *            the schema of this tuple. It must be a valid TupleDesc
-     *            instance with at least one field.
+     * the schema of this tuple. It must be a valid TupleDesc
+     * instance with at least one field.
      */
 
     private TupleDesc tupleDesc;
@@ -28,7 +28,7 @@ public class Tuple implements Serializable {
     public Tuple(TupleDesc td) {
         this.tupleDesc = td;
         this.fields = new ArrayList<>();
-        for(int i=0;i<td.numFields();i++) {
+        for (int i = 0; i < td.numFields(); i++) {
             this.fields.add(new IntField(0));
         }
     }
@@ -42,7 +42,7 @@ public class Tuple implements Serializable {
 
     /**
      * @return The RecordId representing the location of this tuple on disk. May
-     *         be null.
+     * be null.
      */
     public RecordId getRecordId() {
         return this.recordId;
@@ -51,8 +51,7 @@ public class Tuple implements Serializable {
     /**
      * Set the RecordId information for this tuple.
      *
-     * @param rid
-     *            the new RecordId for this tuple.
+     * @param rid the new RecordId for this tuple.
      */
     public void setRecordId(RecordId rid) {
         this.recordId = rid;
@@ -61,20 +60,16 @@ public class Tuple implements Serializable {
     /**
      * Change the value of the ith field of this tuple.
      *
-     * @param i
-     *            index of the field to change. It must be a valid index.
-     * @param f
-     *            new value for the field.
+     * @param i index of the field to change. It must be a valid index.
+     * @param f new value for the field.
      */
     public void setField(int i, Field f) {
-        this.fields.set(i,f);
+        this.fields.set(i, f);
     }
 
     /**
+     * @param i field index to return. Must be a valid index.
      * @return the value of the ith field, or null if it has not been set.
-     *
-     * @param i
-     *            field index to return. Must be a valid index.
      */
     public Field getField(int i) {
         return this.fields.get(i);
@@ -83,16 +78,16 @@ public class Tuple implements Serializable {
     /**
      * Returns the contents of this Tuple as a string. Note that to pass the
      * system tests, the format needs to be as follows:
-     *
+     * <p>
      * column1\tcolumn2\tcolumn3\t...\tcolumnN
-     *
+     * <p>
      * where \t is any whitespace (except a newline)
      */
     public String toString() {
         StringBuffer res = new StringBuffer();
-        for(int i=0;i<this.tupleDesc.numFields();i++) {
+        for (int i = 0; i < this.tupleDesc.numFields(); i++) {
             res.append(this.fields.get(i));
-            if(i!=this.tupleDesc.numFields() - 1) {
+            if (i != this.tupleDesc.numFields() - 1) {
                 res.append('\t');
             }
         }
@@ -100,19 +95,16 @@ public class Tuple implements Serializable {
     }
 
     /**
-     * @return
-     *        An iterator which iterates over all the fields of this tuple
-     * */
-    public Iterator<Field> fields()
-    {
+     * @return An iterator which iterates over all the fields of this tuple
+     */
+    public Iterator<Field> fields() {
         return this.fields.iterator();
     }
 
     /**
      * reset the TupleDesc of this tuple (only affecting the TupleDesc)
-     * */
-    public void resetTupleDesc(TupleDesc td)
-    {
+     */
+    public void resetTupleDesc(TupleDesc td) {
         this.tupleDesc = td;
     }
 }

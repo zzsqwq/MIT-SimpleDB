@@ -3,7 +3,10 @@ package simpledb.execution;
 import simpledb.common.Database;
 import simpledb.common.DbException;
 import simpledb.common.Type;
-import simpledb.storage.*;
+import simpledb.storage.DbFile;
+import simpledb.storage.DbFileIterator;
+import simpledb.storage.Tuple;
+import simpledb.storage.TupleDesc;
 import simpledb.transaction.TransactionAbortedException;
 import simpledb.transaction.TransactionId;
 
@@ -23,21 +26,19 @@ public class SeqScan implements OpIterator {
     private String table_alias_;
     private DbFile db_file_;
     private DbFileIterator db_file_iter_;
+
     /**
      * Creates a sequential scan over the specified table as a part of the
      * specified transaction.
      *
-     * @param tid
-     *            The transaction this scan is running as a part of.
-     * @param tableid
-     *            the table to scan.
-     * @param tableAlias
-     *            the alias of this table (needed by the parser); the returned
-     *            tupleDesc should have fields with name tableAlias.fieldName
-     *            (note: this class is not responsible for handling a case where
-     *            tableAlias or fieldName are null. It shouldn't crash if they
-     *            are, but the resulting name can be null.fieldName,
-     *            tableAlias.null, or null.null).
+     * @param tid        The transaction this scan is running as a part of.
+     * @param tableid    the table to scan.
+     * @param tableAlias the alias of this table (needed by the parser); the returned
+     *                   tupleDesc should have fields with name tableAlias.fieldName
+     *                   (note: this class is not responsible for handling a case where
+     *                   tableAlias or fieldName are null. It shouldn't crash if they
+     *                   are, but the resulting name can be null.fieldName,
+     *                   tableAlias.null, or null.null).
      */
     public SeqScan(TransactionId tid, int tableid, String tableAlias) {
         this.tid_ = tid;
@@ -47,33 +48,30 @@ public class SeqScan implements OpIterator {
     }
 
     /**
-     * @return
-     *       return the table name of the table the operator scans. This should
-     *       be the actual name of the table in the catalog of the database
-     * */
+     * @return return the table name of the table the operator scans. This should
+     * be the actual name of the table in the catalog of the database
+     */
     public String getTableName() {
         return Database.getCatalog().getTableName(this.table_id_);
     }
 
     /**
      * @return Return the alias of the table this operator scans.
-     * */
-    public String getAlias()
-    {
+     */
+    public String getAlias() {
         return this.table_alias_;
     }
 
     /**
      * Reset the tableid, and tableAlias of this operator.
-     * @param tableid
-     *            the table to scan.
-     * @param tableAlias
-     *            the alias of this table (needed by the parser); the returned
-     *            tupleDesc should have fields with name tableAlias.fieldName
-     *            (note: this class is not responsible for handling a case where
-     *            tableAlias or fieldName are null. It shouldn't crash if they
-     *            are, but the resulting name can be null.fieldName,
-     *            tableAlias.null, or null.null).
+     *
+     * @param tableid    the table to scan.
+     * @param tableAlias the alias of this table (needed by the parser); the returned
+     *                   tupleDesc should have fields with name tableAlias.fieldName
+     *                   (note: this class is not responsible for handling a case where
+     *                   tableAlias or fieldName are null. It shouldn't crash if they
+     *                   are, but the resulting name can be null.fieldName,
+     *                   tableAlias.null, or null.null).
      */
     public void reset(int tableid, String tableAlias) {
         this.table_id_ = tableid;
@@ -98,10 +96,10 @@ public class SeqScan implements OpIterator {
      * (e.g., "alias.fieldName").
      *
      * @return the TupleDesc with field names from the underlying HeapFile,
-     *         prefixed with the tableAlias string from the constructor.
+     * prefixed with the tableAlias string from the constructor.
      */
     public TupleDesc getTupleDesc() {
-        if(this.table_alias_ == null) {
+        if (this.table_alias_ == null) {
             this.table_alias_ = "null";
         }
 
@@ -111,17 +109,17 @@ public class SeqScan implements OpIterator {
         Type[] types = new Type[filed_num];
         String[] names = new String[filed_num];
 
-        for(int i=0;i< filed_num;i++) {
+        for (int i = 0; i < filed_num; i++) {
             types[i] = td_.getFieldType(i);
             names[i] = this.table_alias_ + "." + td_.getFieldName(i);
         }
 
-        return new TupleDesc(types,names);
+        return new TupleDesc(types, names);
 
     }
 
     public boolean hasNext() throws TransactionAbortedException, DbException {
-        if(db_file_iter_ == null) {
+        if (db_file_iter_ == null) {
             return false;
         }
         return db_file_iter_.hasNext();
@@ -129,19 +127,19 @@ public class SeqScan implements OpIterator {
 
     public Tuple next() throws NoSuchElementException,
             TransactionAbortedException, DbException {
-        if(db_file_iter_ == null) {
+        if (db_file_iter_ == null) {
             throw new NoSuchElementException();
         }
         return db_file_iter_.next();
     }
 
     public void close() {
-        if(db_file_iter_ != null) db_file_iter_.close();
+        if (db_file_iter_ != null) db_file_iter_.close();
     }
 
 
     public void rewind() throws DbException, NoSuchElementException,
             TransactionAbortedException {
-        if(db_file_iter_ != null) db_file_iter_.rewind();
+        if (db_file_iter_ != null) db_file_iter_.rewind();
     }
 }

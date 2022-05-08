@@ -1,12 +1,13 @@
 package simpledb.execution;
 
-import simpledb.storage.Field;
-import simpledb.transaction.TransactionAbortedException;
 import simpledb.common.DbException;
+import simpledb.storage.Field;
 import simpledb.storage.Tuple;
 import simpledb.storage.TupleDesc;
+import simpledb.transaction.TransactionAbortedException;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * The Join operator implements the relational join operation.
@@ -22,13 +23,10 @@ public class Join extends Operator {
     /**
      * Constructor. Accepts two children to join and the predicate to join them
      * on
-     * 
-     * @param p
-     *            The predicate to use to join the children
-     * @param child1
-     *            Iterator for the left(outer) relation to join
-     * @param child2
-     *            Iterator for the right(inner) relation to join
+     *
+     * @param p      The predicate to use to join the children
+     * @param child1 Iterator for the left(outer) relation to join
+     * @param child2 Iterator for the right(inner) relation to join
      */
     public Join(JoinPredicate p, OpIterator child1, OpIterator child2) {
         this.p_ = p;
@@ -41,29 +39,27 @@ public class Join extends Operator {
     }
 
     /**
-     * @return
-     *       the field name of join field1. Should be quantified by
-     *       alias or table name.
-     * */
+     * @return the field name of join field1. Should be quantified by
+     * alias or table name.
+     */
     public String getJoinField1Name() {
         return child_1_.getTupleDesc().getFieldName(p_.getField1());
     }
 
     /**
-     * @return
-     *       the field name of join field2. Should be quantified by
-     *       alias or table name.
-     * */
+     * @return the field name of join field2. Should be quantified by
+     * alias or table name.
+     */
     public String getJoinField2Name() {
         return child_2_.getTupleDesc().getFieldName(p_.getField2());
     }
 
     /**
      * @see TupleDesc#merge(TupleDesc, TupleDesc) for possible
-     *      implementation logic.
+     * implementation logic.
      */
     public TupleDesc getTupleDesc() {
-        return TupleDesc.merge(child_1_.getTupleDesc(),child_2_.getTupleDesc());
+        return TupleDesc.merge(child_1_.getTupleDesc(), child_2_.getTupleDesc());
     }
 
     public void open() throws DbException, NoSuchElementException,
@@ -98,39 +94,41 @@ public class Join extends Operator {
      * <p>
      * For example, if one tuple is {1,2,3} and the other tuple is {1,5,6},
      * joined on equality of the first column, then this returns {1,2,3,1,5,6}.
-     * 
+     *
      * @return The next matching tuple.
      * @see JoinPredicate#filter
      */
     private Tuple mergeTuple(Tuple t1, Tuple t2) {
 
-        Tuple res_tuple = new Tuple(TupleDesc.merge(child_1_.getTupleDesc(),child_2_.getTupleDesc()));
+        Tuple res_tuple = new Tuple(TupleDesc.merge(child_1_.getTupleDesc(), child_2_.getTupleDesc()));
         int cnt = 0;
         Iterator<Field> fieldIterator = t1.fields();
-        while(fieldIterator.hasNext()) {
+        while (fieldIterator.hasNext()) {
             res_tuple.setField(cnt++, fieldIterator.next());
         }
-        Iterator<Field >fieldIterator2 = t2.fields();
-        while(fieldIterator2.hasNext()) {
+        Iterator<Field> fieldIterator2 = t2.fields();
+        while (fieldIterator2.hasNext()) {
             res_tuple.setField(cnt++, fieldIterator2.next());
         }
         return res_tuple;
     }
+
     private Tuple t = null;
+
     // TODO: last mistake, why
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
         // 二层循环，类似于冒泡
-        while(child_1_.hasNext() || t!=null) {
-            if(t == null) {
+        while (child_1_.hasNext() || t != null) {
+            if (t == null) {
                 t = child_1_.next();
-                if(!child_2_.hasNext()) {
+                if (!child_2_.hasNext()) {
                     child_2_.rewind();
                 }
             }
-            while(child_2_.hasNext()) {
+            while (child_2_.hasNext()) {
                 Tuple tt = child_2_.next();
-                if(p_.filter(t,tt)){
-                    return mergeTuple(t,tt);
+                if (p_.filter(t, tt)) {
+                    return mergeTuple(t, tt);
                 }
             }
             t = null;
@@ -140,7 +138,7 @@ public class Join extends Operator {
 
     @Override
     public OpIterator[] getChildren() {
-        return new OpIterator[]{child_1_,child_2_};
+        return new OpIterator[]{child_1_, child_2_};
     }
 
     @Override

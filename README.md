@@ -13,8 +13,8 @@ projects. In our case, your code will be in a private repository that is visible
 This document describes what you need to do to get started with git, and also download and upload 6.830/6.814 labs via
 GitHub.
 
-**If you are not a registered student at MIT, you are welcome to follow along, but we ask you to please keep your solution PRIVATE and not make it
-publicly available**
+**If you are not a registered student at MIT, you are welcome to follow along, but we ask you to please keep your
+solution PRIVATE and not make it publicly available**
 
 ## Contents
 
@@ -52,8 +52,8 @@ Instructions for installing git on Linux, OSX, or Windows can be found at
 [GitBook:
 Installing](http://git-scm.com/book/en/Getting-Started-Installing-Git).
 
-If you are using Eclipse/IntelliJ, many versions come with git configured. The instructions will be slightly different than the
-command line instructions listed but will work for any OS. Detailed instructions can be found
+If you are using Eclipse/IntelliJ, many versions come with git configured. The instructions will be slightly different
+than the command line instructions listed but will work for any OS. Detailed instructions can be found
 at [EGit User Guide](http://wiki.eclipse.org/EGit/User_Guide)
 , [EGit Tutorial](http://eclipsesource.com/blogs/tutorials/egit-tutorial), or
 [IntelliJ Help](https://www.jetbrains.com/help/idea/version-control-integration.html).
@@ -74,18 +74,19 @@ You should have Git installed from the previous section.
    ```bash
     $ git pull
    ```
-   to get the latest. 
-   
+   to get the latest.
+
    That's it. You can start working on the labs! That said, we strongly encourage you to use git for more than just
-   downloading the labs. In the rest of the guide we will walk you through on how to use git for version-control
-   during your own development. 
+   downloading the labs. In the rest of the guide we will walk you through on how to use git for version-control during
+   your own development.
 
 2. Notice that you are cloning from our repo, which means that it will be inappropriate for you to push your code to it.
-   If you want to use git for version control, you will need to create your own repo to write your changes to. Do so 
-   by clicking 'New' on the left in github, and make sure to choose **Private** when creating, so others cannot see your
+   If you want to use git for version control, you will need to create your own repo to write your changes to. Do so by
+   clicking 'New' on the left in github, and make sure to choose **Private** when creating, so others cannot see your
    code! Now we are going to change the repo we just checked out to point to your personal repository.
 
-3. By default the remote called `origin` is set to the location that you cloned the repository from. You should see the following:
+3. By default the remote called `origin` is set to the location that you cloned the repository from. You should see the
+   following:
 
    ```bash
     $ git remote -v
@@ -93,7 +94,8 @@ You should have Git installed from the previous section.
         origin https://github.com/MIT-DB-Class/simple-db-hw-2021.git (push)
    ```
 
-   We don't want that remote to be the origin. Instead, we want to change it to point to your repository. To do that, issue the following command:
+   We don't want that remote to be the origin. Instead, we want to change it to point to your repository. To do that,
+   issue the following command:
 
    ```bash
     $ git remote rename origin upstream
@@ -107,7 +109,8 @@ You should have Git installed from the previous section.
         upstream https://github.com/MIT-DB-Class/simple-db-hw-2021.git (push)
    ```
 
-4. Lastly we need to give your repository a new `origin` since it is lacking one. Issue the following command, substituting your athena username:
+4. Lastly we need to give your repository a new `origin` since it is lacking one. Issue the following command,
+   substituting your athena username:
 
    ```bash
     $ git remote add origin https://github.com/[your-repo]
@@ -125,16 +128,17 @@ You should have Git installed from the previous section.
    fatal: remote origin already exists.
    ```
 
-   This appears to happen to some depending on the version of Git they are using. To fix it, just issue the following command:
+   This appears to happen to some depending on the version of Git they are using. To fix it, just issue the following
+   command:
 
    ```bash
    $ git remote set-url origin https://github.com/[your-repo]
    ```
 
-   This solution was found from [StackOverflow](http://stackoverflow.com/a/2432799) thanks to [Cassidy Williams](https://github.com/cassidoo).
+   This solution was found from [StackOverflow](http://stackoverflow.com/a/2432799) thanks
+   to [Cassidy Williams](https://github.com/cassidoo).
 
    For reference, your final `git remote -v` should look like following when it's setup correctly:
-
 
    ```bash
     $ git remote -v

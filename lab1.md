@@ -256,8 +256,8 @@ IntelliJ is a more modern Java IDE that is popular and more intuitive to use by 
 install it and open the application. Similar to Eclipse, under Projects, select Open and navigate to your project root.
 Double-click on the .project file (you may need to configure your operating system to reveal hidden files to see it),
 and click "open as project". IntelliJ has tool window support with Ant that you may want to setup according to
-instructions [here](https://www.jetbrains.com/help/idea/ant.html), but this is not essential to development.
-You can find a detailed walkthrough of IntelliJ features [here](https://www.jetbrains.com/help/idea/discover-intellij-idea.html)
+instructions [here](https://www.jetbrains.com/help/idea/ant.html), but this is not essential to development. You can
+find a detailed walkthrough of IntelliJ features [here](https://www.jetbrains.com/help/idea/discover-intellij-idea.html)
 
 ### 1.3. Implementation hints
 
@@ -680,9 +680,9 @@ repeatedly calls `hasNext` and `next` on the `SeqScan` operator. As tuples are o
 printed out on the command line.
 
 We **strongly recommend** you try this out as a fun end-to-end test that will help you get experience writing your own
-test programs for simpledb. You should create the file "test.java" in the src/java/simpledb directory with the code above, 
-and you should add some "import" statement above the code, 
-and place the `some_data_file.dat` file in the top level directory. Then run:
+test programs for simpledb. You should create the file "test.java" in the src/java/simpledb directory with the code
+above, and you should add some "import" statement above the code, and place the `some_data_file.dat` file in the top
+level directory. Then run:
 
 ```
 ant
@@ -714,14 +714,14 @@ that, untarred, it creates a <tt>6.830-lab1/src/simpledb</tt> directory with
 your code) and submit it on the [6.830 Stellar Site](https://stellar.mit.edu/S/course/6/sp13/6.830/index.html). You can use the `ant handin` target to generate the tarball.
 -->
 
-We will be using gradescope to autograde all programming assignments. You should have all been invited to the
-class instance; if not, please check piazza for an invite code. If you are still having trouble, let us know and we can
-help you set up. You may submit your code multiple times before the deadline; we will use the latest version as 
-determined by gradescope. Place the write-up in a file called lab1-writeup.txt with your submission. 
-You also need to explicitly add any other files you create, such as new *.java files.
+We will be using gradescope to autograde all programming assignments. You should have all been invited to the class
+instance; if not, please check piazza for an invite code. If you are still having trouble, let us know and we can help
+you set up. You may submit your code multiple times before the deadline; we will use the latest version as determined by
+gradescope. Place the write-up in a file called lab1-writeup.txt with your submission. You also need to explicitly add
+any other files you create, such as new *.java files.
 
-The easiest way to submit to gradescope is with `.zip` files containing your code. On Linux/MacOS, you can
-do so by running the following command:
+The easiest way to submit to gradescope is with `.zip` files containing your code. On Linux/MacOS, you can do so by
+running the following command:
 
 ```bash
 $ zip -r submission.zip src/ lab1-writeup.txt
@@ -747,13 +747,14 @@ If you are the first person to report a particular bug in the code, we will give
 
 <p>75% of your grade will be based on whether or not your code passes the system test suite we will run over it. These tests will be a superset of the tests we have provided. Before handing in your code, you should make sure it produces no errors (passes all of the tests) from both  <tt>ant test</tt> and <tt>ant systemtest</tt>.
 
-**Important:** before testing, gradescope will replace your <tt>build.xml</tt> and the entire contents of the <tt>test</tt>
+**Important:** before testing, gradescope will replace your <tt>build.xml</tt> and the entire contents of the <tt>
+test</tt>
 directory with our version of these files. This means you cannot change the format of <tt>.dat</tt> files!  You should
 also be careful changing our APIs. You should test that your code compiles the unmodified tests.
 
-You should get immediate feedback and error outputs for failed tests (if any) from gradescope after
-submission. The score given will be your grade for the autograded portion of the assignment. An additional 25% of your
-grade will be based on the quality of your writeup and our subjective evaluation of your code. This part
-will also be published on gradescope after we finish grading your assignment.
+You should get immediate feedback and error outputs for failed tests (if any) from gradescope after submission. The
+score given will be your grade for the autograded portion of the assignment. An additional 25% of your grade will be
+based on the quality of your writeup and our subjective evaluation of your code. This part will also be published on
+gradescope after we finish grading your assignment.
 
 We had a lot of fun designing this assignment, and we hope you enjoy hacking on it!

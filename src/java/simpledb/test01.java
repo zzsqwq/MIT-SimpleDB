@@ -1,21 +1,22 @@
 package simpledb;
 
-import simpledb.common.Type;
-import simpledb.storage.TupleDesc;
-import simpledb.storage.Tuple;
-import simpledb.storage.HeapFile;
 import simpledb.common.Database;
-import simpledb.transaction.TransactionId;
+import simpledb.common.Type;
 import simpledb.execution.SeqScan;
-import java.io.*;
+import simpledb.storage.HeapFile;
+import simpledb.storage.Tuple;
+import simpledb.storage.TupleDesc;
+import simpledb.transaction.TransactionId;
+
+import java.io.File;
 
 public class test01 {
 
     public static void main(String[] argv) {
 
         // construct a 3-column table schema
-        Type types[] = new Type[]{ Type.INT_TYPE, Type.INT_TYPE, Type.INT_TYPE };
-        String names[] = new String[]{ "field0", "field1", "field2" };
+        Type types[] = new Type[]{Type.INT_TYPE, Type.INT_TYPE, Type.INT_TYPE};
+        String names[] = new String[]{"field0", "field1", "field2"};
         TupleDesc descriptor = new TupleDesc(types, names);
 
         // create the table, associate it with some_data_file.dat
@@ -38,7 +39,7 @@ public class test01 {
             f.close();
             Database.getBufferPool().transactionComplete(tid);
         } catch (Exception e) {
-            System.out.println ("Exception : " + e);
+            System.out.println("Exception : " + e);
         }
     }
 
